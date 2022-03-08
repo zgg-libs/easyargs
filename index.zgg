@@ -1,0 +1,27 @@
+
+export func parse(args) {
+	args = args ?? @sys.args
+	i := 0
+	params := {}
+	while i < len(args) {
+		a := str(args[i])
+		if !a.startsWith('-') {
+			i++
+			continue
+		}
+		a = a.substr(1)
+		if p := a.indexOf('='); p >= 0 {
+			v := a.substr(p+1)
+			a = a.substr(0, p)
+			params[a] = v
+		} else {
+			params[a] = true
+		}
+		args = args.slice(0, i) + args.slice(i+1)
+	}
+	return [params, args]
+}
+
+if isMain {
+	println(parse(['-addr=:8080', '-h', 'a1', '-v', 'a2']))
+}
